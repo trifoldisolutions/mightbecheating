@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "tw": "tailwindcss -i ./src/input.css -o ./public/output.css --watch",
+    "tw": "tailwindcss -i ./src/input.css -o ./public/output.css --watch=always",
     "dev:all": "concurrently -k -n TW,SERVER -c yellow,cyan \"npm run tw\" \"npm run dev\""
   },
   "dependencies": {
