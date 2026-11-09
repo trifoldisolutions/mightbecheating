@@ -14,10 +14,19 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-app.get('/', (req, res) => {
-    res.send('Server is running!');
-});
+const facades = [
+    { name: 'Public', mount: '/', router: require('./routes/public') },
+];
+
+facades.forEach(({ mount, router }) => app.use(mount, router));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    facades.forEach(({ name, mount, router }) => {
+        console.log(`[${name}]`);
+        (router.routes || []).forEach(({ method, path, label }) => {
+            const full = (mount === '/' ? '' : mount) + (path === '/' && mount !== '/' ? '' : path);
+            console.log(`  ${method.padEnd(6)} http://localhost:${PORT}${full} — ${label}`);
+        });
+    });
 });
